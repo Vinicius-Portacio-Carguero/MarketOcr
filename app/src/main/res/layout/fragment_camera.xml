@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:text="See all list">
+
+    </Button>
+
+    <SurfaceView
+        android:id="@+id/surface_camera_preview"
+        android:layout_width="match_parent"
+        android:layout_height="500dp"
+        android:layout_weight="1"
+         />
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="100dp">
+
+        <TextView
+            android:id="@+id/tv_product"
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:text="Product"
+            app:layout_constraintBottom_toTopOf="@+id/tv_result"
+            app:layout_constraintStart_toStartOf="parent"
+            />
+
+        <TextView
+            android:id="@+id/tv_result"
+            android:layout_width="200dp"
+            android:layout_height="80dp"
+            android:gravity="center"
+            android:text="Result"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+
+            android:layout_marginStart="156dp"
+
+            android:layout_marginLeft="156dp"
+            android:text="Quantity"
+            app:layout_constraintBottom_toTopOf="@+id/tv_result"
+            app:layout_constraintStart_toEndOf="@+id/tv_product"></TextView>
+
+        <Spinner
+            android:id="@+id/spinner"
+            android:layout_width="100dp"
+            android:layout_height="80dp"
+            android:spinnerMode="dropdown"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toRightOf="@+id/tv_result"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="1.0"></Spinner>
+
+        <Button
+            android:id="@+id/button_save"
+            android:layout_width="100dp"
+            android:layout_height="80dp"
+            android:layout_marginTop="20dp"
+            android:spinnerMode="dropdown"
+            android:text="Save"
+            app:layout_constraintLeft_toRightOf="@+id/spinner"
+            app:layout_constraintTop_toTopOf="parent"></Button>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</LinearLayout>
