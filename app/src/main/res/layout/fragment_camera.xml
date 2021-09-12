@@ -7,12 +7,40 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="70dp"
-        android:text="See all list">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
 
-    </Button>
+
+        <Button
+            android:id="@+id/btn_total"
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:layout_marginEnd="112dp"
+            android:layout_marginRight="112dp"
+            android:text="Ver Total"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/btn_reset"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+        </Button>
+
+        <Button
+            android:id="@+id/btn_reset"
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:enabled="false"
+
+            android:layout_marginLeft="112dp"
+            android:text="Reiniciar compra"
+            app:backgroundTint="#C32D2D"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/btn_total"
+            app:layout_constraintTop_toTopOf="parent">
+
+        </Button>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <SurfaceView
         android:id="@+id/surface_camera_preview"
@@ -30,7 +58,7 @@
             android:id="@+id/tv_product"
             android:layout_width="wrap_content"
             android:layout_height="20dp"
-            android:text="Product"
+            android:text="Produto"
             app:layout_constraintBottom_toTopOf="@+id/tv_result"
             app:layout_constraintStart_toStartOf="parent"
             />
@@ -40,7 +68,7 @@
             android:layout_width="200dp"
             android:layout_height="80dp"
             android:gravity="center"
-            android:text="Result"
+            android:text="10,00"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
@@ -52,7 +80,7 @@
             android:layout_marginStart="156dp"
 
             android:layout_marginLeft="156dp"
-            android:text="Quantity"
+            android:text="Quantidade"
             app:layout_constraintBottom_toTopOf="@+id/tv_result"
             app:layout_constraintStart_toEndOf="@+id/tv_product"></TextView>
 
@@ -72,7 +100,7 @@
             android:layout_height="80dp"
             android:layout_marginTop="20dp"
             android:spinnerMode="dropdown"
-            android:text="Save"
+            android:text="Salvar"
             app:layout_constraintLeft_toRightOf="@+id/spinner"
             app:layout_constraintTop_toTopOf="parent"></Button>
 

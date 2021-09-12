@@ -1,12 +1,14 @@
 package com.example.marketocr
 
 import android.annotation.SuppressLint
-import android.app.AlertDialog
+import android.content.Context
 import android.os.Bundle
 import android.view.*
 import android.widget.*
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import com.example.marketocr.utils.alert.Alert
+import com.example.marketocr.utils.spinners.SpinnerSetup
 import com.example.marketocr.viewModel.ValueViewModel
 import com.google.android.gms.vision.CameraSource
 import com.google.android.gms.vision.Detector
@@ -15,11 +17,18 @@ import com.google.android.gms.vision.text.TextRecognizer
 
 class CameraFragment : Fragment(), View.OnClickListener{
 
-    // Move this validation for more low level layer
+    // TODO: Criar módulo de permissão
     private val permission = com.example.marketocr.utils.camera.Permission(context)
-    private val viewModel: ValueViewModel by viewModels()
-    val list = mutableListOf<Int>()
 
+    private val viewModel: ValueViewModel by viewModels()
+    private val spinnerList = mutableListOf<Int>()
+    private val saveList = mutableListOf<String>()
+
+    private val alert = Alert()
+    private val spinnerSetup = SpinnerSetup()
+
+    private var value = view?.findViewById<TextView>(R.id.tv_result)
+    private var spinner = view?.findViewById<Spinner>(R.id.spinner)
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -33,10 +42,23 @@ class CameraFragment : Fragment(), View.OnClickListener{
                 container,
                 false)
 
-        for( i in 0..20){ list.add(i) }
+        for( i in 0..20){ spinnerList.add(i) }
 
-        view?.findViewById<Button>(R.id.button_save)?.setOnClickListener {
-            showSaveDialog()
+        spinnerSetup.spinnerSetup(
+            view?.findViewById(R.id.spinner),
+            spinnerList,
+            requireContext()
+        )
+
+        var resultText = view.findViewById<TextView>(R.id.tv_result)
+
+        view.findViewById<Button>(R.id.button_save).setOnClickListener {
+//            saveList.add(resultText.text.toString())
+//            println(saveList)
+//            showSaveDialog(saveList[0])
+
+            saveList.add(spinnerList[spinner?.selectedItemPosition!!].toString())
+            showSaveDialog(saveList[0])
         }
 
         return view
@@ -47,8 +69,8 @@ class CameraFragment : Fragment(), View.OnClickListener{
 
         activity?.let { permission.requestPermissionCamera(context, it) }
         permission.permissionCheck(context)
+
         doOcr(view?.findViewById(R.id.surface_camera_preview))
-        quantitySetup()
 
     }
 
@@ -117,71 +139,38 @@ class CameraFragment : Fragment(), View.OnClickListener{
         })
     }
 
-    private fun quantitySetup(){
-
-        val spinner = view?.findViewById<Spinner>(R.id.spinner)
-        println("@@@@@@")
-        println(list)
-
-        spinner?.adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_dropdown_item, list)
-
-        spinner?.onItemSelectedListener = object : AdapterView.OnItemClickListener,
-            AdapterView.OnItemSelectedListener {
-
-            override fun onItemSelected(
-                parent: AdapterView<*>?,
-                view: View?,
-                position: Int,
-                id: Long
-            ) {
-                list[position]
-            }
-
-            override fun onNothingSelected(parent: AdapterView<*>?) {
-                TODO("Not yet implemented")
-            }
-
-            override fun onItemClick(
-                parent: AdapterView<*>?,
-                view: View?,
-                position: Int,
-                id: Long
-            ) {}
-
-        }
-    }
 
 
-    private fun showSaveDialog(){
 
-
-        var value = view?.findViewById<TextView>(R.id.tv_result)
-        var spinner = view?.findViewById<Spinner>(R.id.spinner)
-
-        val builder = AlertDialog.Builder(context)
-        builder.setTitle("Deseja salvar esse valor ?")
-        builder.setMessage("Valor: ${value?.text.toString()} | Quantidade: ${list[spinner?.selectedItemPosition!!]}")
-
-        builder
-            .setPositiveButton("Sim") { dialog, which ->
-
-                var valueString = value?.text.toString()
-                var spinnerInt =list[spinner?.selectedItemPosition!!]
-
-                save(valueString, spinnerInt )
-            }
-            .setNegativeButton("Não") { dialog, which ->
+    private fun showSaveDialog(message: String){
+        val showDialog = alert.showDialog("Deseja salvar esse valor ?", context)
+            .setMessage(message)
+            .setPositiveButton(R.string.YES_DIALOG){dialog, which -> /*** save() ***/}
+            .setNegativeButton(R.string.NOT_DIALOG) { dialog, which ->
                 Toast.makeText(context, "Valor não salvo", Toast.LENGTH_SHORT)
             }
+            .create()
 
-
-        val dialog: AlertDialog = builder.create()
-        dialog.show()
-
+        showDialog.show()
     }
 
-    private fun save(value: String, quantity: Int?){
-        viewModel.doInsertValue(value, quantity)
+    private fun showValuePreview(title: String, context: Context?){
+        val result = viewModel.sumAll(context)
+
+        val createDialog = alert
+            .showDialog(result, context)
+            .setPositiveButton(R.string.OK_DIALOG){ dialog, which -> }
+            .create()
+
+            createDialog.show()
+    }
+
+    private fun save(value: String, quantity: Int?, context: Context?){
+        viewModel
+            .doInsertValue(value.replace(",", "."), quantity, context)
+
+        for(i in 0..saveList.size - 1) saveList.removeFirst()
+
     }
 
     override fun onClick(v: View?) {}
