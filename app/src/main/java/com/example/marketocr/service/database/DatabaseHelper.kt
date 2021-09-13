@@ -8,7 +8,7 @@ class DatabaseHelper(context: Context?) : SQLiteOpenHelper(context, "VALUES", nu
 
     override fun onCreate(db: SQLiteDatabase?) {
         db?.execSQL("CREATE TABLE value(ID INTEGER PRIMARY KEY AUTOINCREMENT, VALUE DOUBLE, QUANTITY INT, RESULT DOUBLE)")
-
+        db?.execSQL("INSERT INTO value(VALUE, QUANTITY, RESULT) VALUES (0.0, 0, 0.0)")
     }
 
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {

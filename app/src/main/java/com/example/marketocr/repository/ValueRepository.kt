@@ -6,7 +6,7 @@ import javax.inject.Inject
 
 class ValueRepository{
 
-    fun insertValue(value: String, quantity: Int?, context: Context?) {
+    fun insertValue(value: Double, quantity: Int?, context: Context?) {
         val dao = ValueDao(context)
 
         dao.registerValue(value, quantity)

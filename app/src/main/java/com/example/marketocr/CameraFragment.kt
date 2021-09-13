@@ -19,16 +19,14 @@ class CameraFragment : Fragment(), View.OnClickListener{
 
     // TODO: Criar módulo de permissão
     private val permission = com.example.marketocr.utils.camera.Permission(context)
-
     private val viewModel: ValueViewModel by viewModels()
-    private val spinnerList = mutableListOf<Int>()
-    private val saveList = mutableListOf<String>()
 
     private val alert = Alert()
     private val spinnerSetup = SpinnerSetup()
 
-    private var value = view?.findViewById<TextView>(R.id.tv_result)
-    private var spinner = view?.findViewById<Spinner>(R.id.spinner)
+    private val spinnerList = mutableListOf<Int>()
+    private val saveList = mutableListOf<String>()
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -44,22 +42,40 @@ class CameraFragment : Fragment(), View.OnClickListener{
 
         for( i in 0..20){ spinnerList.add(i) }
 
+        val spinner = view.findViewById<Spinner>(R.id.spinner)
+        val value = view.findViewById<TextView>(R.id.tv_result)
+        val saveButton = view.findViewById<Button>(R.id.button_save)
+        val previewButton = view.findViewById<Button>(R.id.btn_total)
+        val resetButton = view.findViewById<Button>(R.id.btn_reset)
+
         spinnerSetup.spinnerSetup(
-            view?.findViewById(R.id.spinner),
+            spinner,
             spinnerList,
             requireContext()
+
         )
 
-        var resultText = view.findViewById<TextView>(R.id.tv_result)
-
-        view.findViewById<Button>(R.id.button_save).setOnClickListener {
-//            saveList.add(resultText.text.toString())
-//            println(saveList)
-//            showSaveDialog(saveList[0])
-
-            saveList.add(spinnerList[spinner?.selectedItemPosition!!].toString())
-            showSaveDialog(saveList[0])
+        resetButton.setOnClickListener {
+            reset(context)
         }
+
+        previewButton.setOnClickListener {
+            showValuePreview(context)
+        }
+
+        saveButton.setOnClickListener {
+
+            val spinnerPosition = spinner?.selectedItemPosition!!.toString()
+            val resultText = value.text.toString()
+
+            saveList.add(resultText)
+            saveList.add(spinnerPosition)
+
+            val message = "Valor : ${saveList[0]} | Quantidade : ${saveList[1]}"
+
+            showSaveDialog(message)
+        }
+
 
         return view
     }
@@ -71,6 +87,12 @@ class CameraFragment : Fragment(), View.OnClickListener{
         permission.permissionCheck(context)
 
         doOcr(view?.findViewById(R.id.surface_camera_preview))
+
+
+
+        var resultText = view?.findViewById<TextView>(R.id.tv_result)
+
+
 
     }
 
@@ -139,13 +161,14 @@ class CameraFragment : Fragment(), View.OnClickListener{
         })
     }
 
-
-
-
     private fun showSaveDialog(message: String){
         val showDialog = alert.showDialog("Deseja salvar esse valor ?", context)
             .setMessage(message)
-            .setPositiveButton(R.string.YES_DIALOG){dialog, which -> /*** save() ***/}
+            .setPositiveButton(R.string.YES_DIALOG){dialog, which ->
+
+                save(saveList[0].toString(), saveList[1].toInt(), context)
+
+            }
             .setNegativeButton(R.string.NOT_DIALOG) { dialog, which ->
                 Toast.makeText(context, "Valor não salvo", Toast.LENGTH_SHORT)
             }
@@ -154,8 +177,8 @@ class CameraFragment : Fragment(), View.OnClickListener{
         showDialog.show()
     }
 
-    private fun showValuePreview(title: String, context: Context?){
-        val result = viewModel.sumAll(context)
+    private fun showValuePreview(context: Context?){
+        val result = "Valor Aproximado : R$" + viewModel.sumAll(context)
 
         val createDialog = alert
             .showDialog(result, context)
@@ -165,7 +188,11 @@ class CameraFragment : Fragment(), View.OnClickListener{
             createDialog.show()
     }
 
-    private fun save(value: String, quantity: Int?, context: Context?){
+    private fun reset(context: Context?){
+        viewModel.reset(context)
+    }
+
+    private fun save(value: String, quantity: Int, context: Context?){
         viewModel
             .doInsertValue(value.replace(",", "."), quantity, context)
 

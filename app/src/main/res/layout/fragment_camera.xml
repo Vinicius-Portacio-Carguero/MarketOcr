@@ -14,7 +14,7 @@
 
         <Button
             android:id="@+id/btn_total"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="70dp"
             android:layout_marginEnd="112dp"
             android:layout_marginRight="112dp"
@@ -28,11 +28,11 @@
 
         <Button
             android:id="@+id/btn_reset"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="70dp"
-            android:enabled="false"
-
             android:layout_marginLeft="112dp"
+
+            android:enabled="true"
             android:text="Reiniciar compra"
             app:backgroundTint="#C32D2D"
             app:layout_constraintBottom_toBottomOf="parent"

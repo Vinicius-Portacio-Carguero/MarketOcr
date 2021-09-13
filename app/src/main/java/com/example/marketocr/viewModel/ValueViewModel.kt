@@ -14,12 +14,13 @@ class ValueViewModel(application: Application): AndroidViewModel(application)
 
     var repository = ValueRepository()
 
-    fun doInsertValue(value: String, quantity: Int?, context: Context?)
+    fun doInsertValue(value: String, quantity: Int, context: Context?)
     {
-            repository.insertValue(value, quantity, context)
+        repository.insertValue(value.toDouble(), quantity, context)
     }
 
     fun sumAll(context: Context?): String = repository.sumAll(context)
+
     fun reset(context: Context?) = repository.reset(context)
 
 

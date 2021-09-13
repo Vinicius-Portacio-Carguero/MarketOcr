@@ -8,8 +8,8 @@ open class ValueDao(context: Context?) {
     var contextHelper = DatabaseHelper(context)
     val db = contextHelper.writableDatabase
 
-    fun registerValue(value: String, quantity: Int?){
-        var result = value.toDouble() * quantity!!
+    fun registerValue(value: Double, quantity: Int?){
+        var result = value * quantity!!
 //        var result = 0.0
 
          db.execSQL("INSERT INTO value(VALUE, QUANTITY, RESULT) VALUES('$value', '$quantity','$result')")
